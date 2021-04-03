@@ -1,0 +1,116 @@
+---
+title: "課堂練習模版"
+author: "趙士賢"
+date: "2021-03-24"
+output: output_format
+params:
+  id: "410573095"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Your code
+
+```{r}
+library(lubridate)
+```
+```{r}
+tpeTime <- ymd_hms("2020-03-18 13:52:40",tz="Asia/Taipei")
+```
+```{r}
+pgTime <-mdy_hms("Mar.18,2020,05:52:40",tz="Europe/Lisbon")
+```
+# 使用cat()會顯示記錄秒數
+# 使用as.charater轉成文字再print
+```{r}
+tpeTimevector <-ymd_hms(c("2020-03-05 18:06:36","2020-06-19 07:18:18"),tz="Asia/Taipei")
+cat(as.character(tpeTimevector))
+```
+# 不寫timezone , 預設為UTC
+# with_tz 將時間轉到別的時區
+```{r}
+tpetime3  <- with_tz(tpeTimevector,tzone="America/New_York")
+```
+# iso8601有加時區
+```{r}
+iso_8601 <-format_ISO8601(tpeTime,usetz=T)
+```
+# 時間可加減
+```{r}
+pgTime - tpeTime
+```
+
+# ...T...Z -> UTC時間
+```{r}
+purchasing_time <- ymd_hms("2020-05-26T16:06:19Z")
+quantity <- 2
+location <- "一芳"
+```
+# list允許不同type/class
+# list每個元素可取名 atomic vector也可
+# list命名可用雙引號 , 必須使用等於
+```{r}
+mingsPurchase <- 
+  list(
+     time = purchasing_time ,
+     "location" = location ,
+     `數量` = quantity
+  )
+str(mingsPurchase,1)  #顯示第一層
+```
+# save / load 儲存varibles  .Rda
+```{r}
+save(,file = .Rda)
+load()
+```
+# Dataframe : 等長的list
+```{r}
+example <- list(
+  name=c("小明","小花","小新","美美"),
+  height=c(175,166,170,160),
+  weight=c(77,NA,60,43),
+  birthday=lubridate::ymd(c("1998-03-11","1999-12-22","1995-08-22","2001-10-10")),
+  hobby=c("美食 旅遊","旅遊 時尚","3C 美食","音樂 旅遊"),
+  residence=c("Taipei","New Taipei","Taichung","Kaohsiung"),
+  allowance=factor(c("0-1000","1001-2000","2000+","1001-2000")),
+  bloodType=c("A","B","B","O")
+)
+```
+# 取transpose , 每一筆資料一個list
+```{r}
+tr_example <- purrr::transpose(example)
+str(tr_example)
+```
+# list 轉 dataframe
+## 等長度 , 且都是atomic vector才可轉
+```{r}
+example <- as.data.frame(example)
+```
+# 取元素
+## 可使用list原本方法 or [row , column]
+# 使用$可取出最單純元素
+```{r}
+example$name[c(1,4)]
+# list 原方法
+example[c(1,4) , "name"]
+example[c(1,4) , 1]
+example[c(1,4) , c(T,rep(F,7))]
+example[1, ]
+example[1,1:8]
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
