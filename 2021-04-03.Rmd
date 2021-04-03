@@ -1,0 +1,129 @@
+---
+title: "課堂練習模版"
+author: "趙士賢"
+date: "2021-04-03"
+output: output_format
+params:
+  id: "410573095"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Relational Operators
+```{r}
+example <- list(
+  name=c("小明","小花","小新","美美"),
+  height=c(175,166,170,160),
+  weight=c(77,NA,60,43),
+  birthday=lubridate::ymd(c("1998-03-11","1999-12-22","1995-08-22","2001-10-10")),
+  hobby=c("美食 旅遊","旅遊 時尚","3C 美食","音樂 旅遊"),
+  residence=c("Taipei","New Taipei","Taichung","Kaohsiung"),
+  allowance=factor(c("0-1000","1001-2000","2000+","1001-2000")),
+  bloodType=c("A","B","B","O")
+)
+df_example <- as.data.frame(example)
+df_example[c("hobby","name")][c(1,4)] # error
+```
+## > < >= <= != ==
+# 生成 T/F 向量
+```{r}
+pick_above170 <- example$height >= 170
+c(150,250,11,3) > 170
+example$birthday
+pick_after98 <- example$birthday>=lubridate::ymd("1998-01-01")
+example$name[pick_after98]
+```
+# factor 不可直接比較
+# 以下error
+```{r}
+pick_allowanceOver1000 <- example$allowance >= "1001-2000"
+example$name[pick_allowanceOver1000]
+```
+# %in% 屬於
+```{r}
+example$allowance   %in% c("2000+","1001-2000")
+```
+# 讓factor可排序
+## 使用ordered
+### levels一開始照順序排好
+```{r}
+example$allowance <-  ordered(example$allowance)
+example$allowance <-
+  factor(
+    example$allowance,
+    levels=c("0-1000", "1001-2000", "2000+"),
+    ordered = T # 設定為可排序factor
+  )
+example$allowance >= "1001-2000"
+```
+# 要不要向量反過來 !
+```{r}
+!c(T,F,T,T)
+```
+# missing data
+```{r}
+is.na()
+is.nan()
+```
+# 字元偵測
+## stringr::str_detect negate預設為false
+```{r}
+pick_loveFood <- stringr::str_detect(example$hobby,"美食")
+example$name[pick_loveFood]
+```
+# 邏輯操作 & |
+
+# unique找出獨特值 , table 統計
+```{r}
+set.seed(2020)
+ages_chr <- sample(c("4以下","5-10","11-15"), 15, replace=T)
+unique(ages_chr)
+table(ages_chr)
+```
+# is.ordered 檢查factor是否有排序
+# factor操作
+## head() 取出前6筆
+```{r}
+# 改level
+old_fct <- factor(c("4以下","5-10","11-15"))
+levels(old_fct) <- c("青少年", "幼兒", "兒童")
+old_fct
+```
+# 直接從levels改資料 levels() <-
+# 要改變排序 , 必須使用factor(levels = ...)重新設定
+## 用levels做類別整併
+```{r}
+set.seed(2020)
+ages_chr <- factor(sample(c("4以下","5-9","10-14", "15-19"), 20, replace=T))
+levels(ages_chr) <- c("10以下", "10以下", "10以上", "10以上")
+table(ages_chr)
+```
+# levels 新增類別
+# 先新增類別後 , 才能新增該類別資料
+```{r}
+levels(ages_chr)[3] <- "15以上"
+ages_chr[length(ages_chr)+1] <- "15以上"
+ages_chr
+```
+# c() 會清掉屬性
+```{r}
+fctVector1 <- factor(c("a","b","c","a"))
+attributes(fctVector1)
+fctVector2 <- c(fctVector1)
+attributes(fctVector2)
+```
+# 使用list堆疊可保留原attributes
+```{r}
+fct_a <- factor(c("a","b","c"))
+fct_b <- factor(c("a","d","e"))
+list_ab <-list(fct_a,fct_b) # 還是factor
+factor_ab <- unlist(list_ab)
+factor_ab
+```
+
+
+
+
+
