@@ -1,0 +1,114 @@
+---
+title: "課堂練習模版"
+author: "趙士賢"
+date: "2021-04-23"
+output: output_format
+params:
+  id: "410573095"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Your code
+
+```{r}
+library(purrr)
+```
+
+#  On list
+## vector(mode,length)
+```{r}
+sukiyaMenu <- jsonlite::fromJSON("https://www.dropbox.com/s/iu9b1hnvbtss83q/sukiyaMenu.json?dl=1")
+nonsetMenu3 <- sukiyaMenu[c("豪華雙饗丼", "牛丼類", "咖哩類" )]
+items <- list()
+items$dish_name = vector("list", length=3)
+charVect <- vector("character", 5)
+charVect
+```
+
+# result <- {} 會存最後一個expression的值
+# cat只會留下螢幕顯示 , 不會存到result
+```{r}
+mingsPrice <- # 找出小明價格
+{
+  sizeChoice <- nonsetMenu3[["豪華雙饗丼"]][["product_variations"]][[2]]
+  pick_size <- sizeChoice$name == '飯大碗'
+  sizeChoice$price[pick_size]
+}
+```
+
+# formula and purrr::map
+```{r}
+library(purrr)
+map(
+  list(2,5,3,7),
+  ~{
+    .x^3
+  }
+)
+# 代表list(
+#     {2^3}
+#     {5^3}
+#     {3^3}
+#     {7^3}
+#        )
+```
+
+# .x 有多個值
+```{r}
+map(
+  list(
+    list("Mary", 5),
+    list("John", 10)
+  ),
+  ~{
+    paste0(.x[[1]], " is ",.x[[2]], " years old")
+  }
+)
+```
+
+# .x 代表myData元素值位置
+```{r}
+map(
+  1:2,
+  ~{
+    paste0(myData[[.x]][[1]], " is ", myData[[.x]][[2]], " years old")
+  }
+)
+```
+
+# seq_along 產生1:length(data)
+```{r}
+map(
+  seq_along(sukiyaMenu),
+  ~ {
+    dish_name <- sukiyaMenu[[.x]]$name # 1st expression
+    unlist(dish_name) # 2nd expression
+  }
+) -> result
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

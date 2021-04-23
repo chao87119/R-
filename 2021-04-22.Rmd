@@ -1,0 +1,173 @@
+---
+title: "課堂練習模版"
+author: "趙士賢"
+date: "2021-04-22"
+output: output_format
+params:
+  id: "410573095"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Your code
+
+```{r}
+library(stringr)
+library(glue)
+thatsAlright <- 
+  jsonlite::fromJSON(
+    "https://www.dropbox.com/s/f3ox7rd5favr0o0/thatsAlright.json?dl=1"
+  )
+View(thatsAlright)
+```
+# length : 字串長度
+# str_length : 字元長度
+
+```{r}
+length(c("I will"))
+str_length(c("I will"))  
+length(thatsAlright)
+str_length(thatsAlright)
+```
+# str_split 將指定字串前後分開
+
+```{r}
+line67 <- thatsAlright[c(6,7)]
+line67
+str_split(line67,",")
+str_split("i ,will ,miss",",")
+```
+
+# str_detect 產生T/F向量
+# which      將T/F向量轉成位置
+# str_which  將T/F向量轉成位置
+# str_count  統計每一句含pattern的數目
+# \\byou\\b  可選出只含"you"的
+```{r}
+pick_you <- str_detect(thatsAlright,"you")
+str_view_all(thatsAlright[pick_you],"you")
+whichHas_you <- str_which(thatsAlright, pattern="you")
+countEach_you <- str_count(thatsAlright,
+                           pattern="you")
+```
+
+# regular expression
+# []為字元捲帶 ; ()為字組捲帶
+```{r}
+Rmdfiles <- c("file1.Rmd", "file2.R", "file3.rmd", "file4.RMD", "myRmd.R")
+SchoolIds <- c("410973029", "410988011", "410974023","410783025","710773022","410788021","410673124","410873051","49988001")
+regexPattern="[Rr][Mm][Dd]"
+str_subset(
+  Rmdfiles, pattern=regexPattern)
+regexPattern="[4](108|109)(73|88)"
+str_subset(
+  SchoolIds, pattern=regexPattern)
+```
+
+# str_extract 取出第一個含pattern的字串
+# str_extract_all 取出所有含pattern的字串
+```{r}
+sameIdentities <- c("臺北市", "台北市", "台北大學", "臺北大學", "基隆市")
+str_extract(
+  sameIdentities, pattern="[台臺]北市")
+str_extract_all(sameIdentities, pattern="[台臺]北市")
+```
+
+# str_replace(string,pattern,replacement)
+# pattern 和 string 長度不一樣會recycle
+```{r}
+str_replace(
+  Rmdfiles,
+  pattern = rep("[Rr][Mm][Dd]",5),
+  replacement = rep("Rmd",5)
+)
+```
+
+# str_replace_all 多個pattern偵測
+# replace_vector{old string = new string}
+```{r}
+emailContent <- '親愛的_name_朋友好，
+  恭喜你，你的電子發票號碼_invoiceNumber_ 差點中獎。'
+replacementNamedVector <- c(
+  "_name_" = "小新",
+  "_invoiceNumber_" = "EF-89400133"
+)
+synthesizedContent <- str_replace_all(
+  emailContent,
+  replacementNamedVector
+)
+cat(synthesizedContent)
+```
+
+# 複製多次 {m}
+```{r}
+set.seed(2020)
+d1 <- sample(c(rep("4",10),rep("3",3),rep("7",3)), 25, replace=T)
+d2 <- sample(98:109, 25, replace=T)
+d3 <- sample(c("73", "74", "78", "83", "72"))
+d4 <- sample(1:120, 25, replace=T)
+d4 <- str_pad(d4, 3, side = "left", pad="0")
+schoolIds <- paste0(d1,d2,d3,d4)
+schoolIds
+pattern = "[0123456789]{5}"
+pattern = "[0-9]{5}"
+pattern = "[:digit:]{5}"
+```
+
+# {m,n} m至n個
+# []? 代表0或1個 []+ 代表至少1個 {1,2,3,...}
+# * 不管有沒有
+# 目標位置註解 ?<＝目標？＝
+               ?<!    ?!
+```{r}
+myLove2R <- c("我實在是太愛太愛太愛愛R課程了",
+  "我才是太愛太愛太太愛太太太愛R了",
+  "我則是太愛愛太愛太愛愛愛R了",
+  "找我太太聊天，我太太愛理不理的，我只好回去練我最愛的R。")
+myLove2R[str_which(myLove2R,pattern = "(太愛){2}")]
+str_view_all(myLove2R, "太+愛+(?!理不理)")
+str_view_all(myLove2R, "太+愛+(?=理不理)")
+addresses <- c(
+  '臺中市后里區公館里尾社路385號',
+  '新竹市東區科學園路125號1樓',
+  '新竹市北區竹光路99號',
+  '金門縣金城鎮賢庵里山前33號',
+  '臺中市南屯區工業區二十四路23號1樓')
+str_extract(
+  addresses,
+  "(?<=[縣市])[\u4E00-\u9FFF]+[區鎮]"   # 前面是縣市
+)
+```
+
+# 中間字元排除捲帶 [^xyz]
+# ^ 開頭 ＄結尾
+# [:graph:] 全部字元
+  [\u4E00-\u9FFF] 中日韓文字字元
+```{r}
+str_extract(
+  addresses,
+  "(?<=[縣市])[^區]+[區鎮]"
+)
+Rmdfiles <- c("file1.Rmd", "file2.R", "file3.rmd", "file4.RMD", "myRmd.R")
+str_subset(
+  Rmdfiles, "[Rr][Mm][Dd]$"
+)
+download.file("https://www.dropbox.com/s/o9kt3lxtx9pmjqj/homework2.Rmd?dl=1", destfile = "./hw2.Rmd", mode="wb")
+xfun::read_utf8("./hw2.Rmd") -> hw2lines
+pick_starting3Hash <- str_detect(
+  hw2lines,
+  "^### (?=[0-9])"
+)
+sum(pick_starting3Hash)
+```
+
+
+
+
+
+
+
+
+
