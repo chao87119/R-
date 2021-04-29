@@ -1,0 +1,187 @@
+---
+title: "課堂練習模版"
+author: "趙士賢"
+date: "2021-04-28"
+output: output_format
+params:
+  id: "410573095"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Your code
+
+
+# clipr
+```{r}
+clipr::read_clip()
+clipr::write_clip()
+```
+
+# cut 最左邊的數字要比資料最小值小 ( ]
+      用在時間 [  )
+```{r}
+oringinX <- 0:10
+cut_evenly <- cut(oringinX,breaks = 2)
+cut_evenly
+cut_three <- cut(oringinX,breaks = c(0,3,7,10))
+```
+
+```{r}
+library(lubridate)
+originD <- ymd(c(
+  "2020-01-03", 
+  "2020-02-11",
+  "2020-03-08", 
+  "2020-05-07",
+  "2020-09-20",
+  "2020-10-10",
+  "2020-11-07",
+  "2020-12-05"))
+originD
+cutD <- cut(originD,
+            breaks = 
+              c(
+                min(originD),
+                ymd(c(
+                "2020-03-08",
+                "2020-05-22",
+                "2020-07-20",
+                "2020-10-11")),
+                max(originD)+days(1)
+              ))
+              
+cutD
+levels(cutD) <- c("沒事","事件一","沒事","事件二","沒事")
+
+df <- data.frame(
+  origin=originD,
+  cut=cutD
+)
+View(df)
+```
+
+
+# function
+```{r}
+R <- 0.09
+M <- 10000
+T <- 3
+getPDV <- function(R,M,T){
+      M / (1+R)**3
+}
+getPDV(R=0.05,T=1,M=1000)
+```
+
+# argument
+```{r}
+formals(getPDV)
+```
+
+# body
+```{r}
+body(getPDV)
+```
+
+# environment
+```{r}
+environment(getPDV)
+```
+
+# body的參數找不到,會到誕生的environment找
+```{r}
+TT <- 3
+# What I need to do
+getPDV2 <- function(R,M){
+  M/(1+R)**TT
+}
+```
+
+#  輸出值
+## 最後一個執行列的運算值 (不能存在物件)
+## return value
+## invisible , 指定儲存物件才回傳
+```{r}
+testFun <- function(){
+  a <-2
+  b <- 5
+  a+b
+}
+testFun()
+testFun <- function(){
+  a <-2
+  b <- 5
+  return(a+b)
+}
+testFun()
+testFun <- function(){
+  a <-2
+  b <- 5
+  invisible(a+b)
+}
+testFun()
+output <- testFun()
+output
+```
+# function as value
+# function as argument
+```{r}
+demandFun <- function(P) 5-3*P
+supplyFun <- function(P) 1+0.5*P
+market <- list(
+  demand=demandFun,
+  supply=supplyFun
+)
+df0 <- function(f){
+  epsilon <- 0.00001
+  (f(epsilon)-f(0))/epsilon
+}
+
+df0(market$demand)
+df0(market$supply)
+```
+
+# assertthat::assert_that
+  確認型態
+# 給default value , 要放在最後
+```{r}
+get_userHoroscopes2 <- function(userBirthday){
+  assertthat::assert_that(is.Date(userBirthday),
+                          msg="userBirthday should be a Date class object.")
+  get_userHoroscopes(userBirthday)
+}
+df0 <- function(f, epsilon=0.00001){
+  (f(epsilon)-f(0))/epsilon
+}
+```
+
+# source("./horoscopes.R") , 引入函數
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
