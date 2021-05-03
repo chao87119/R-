@@ -1,0 +1,72 @@
+---
+title: "課堂練習模版"
+author: "趙士賢"
+date: "2021-05-03"
+output: output_format
+params:
+  id: "410573095"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Your code
+
+
+# if else
+# message() 輸出訊息
+
+```{r}
+get_totalBill <- function(bill, hasVoucher)
+{
+  startingBill <- bill
+  if(hasVoucher)
+  {
+    bill <- bill - 20
+  }
+  message("You initial bill is ", startingBill,".\n",
+          "You final bill is ", bill, "\n")
+  bill
+}
+```
+
+# map2 兩個變數一起動
+# map_chr 回傳character
+```{r}
+purrr::map2(
+  customers$bills, customers$vouchers,
+  ~get_totalBill(.x, .y)
+)
+```
+
+# stop()
+# all() , any()
+```{r}
+stop("x has to be non-negative.")
+all()
+any()
+```
+
+# ifelse(condition,yes,no)
+# switch{
+#     condition,
+#     case1 = {
+#     },
+#     case2 = {
+#     },
+#     {
+#             }
+# }
+#
+#readline("") 可輸入值
+
+
+
+
+
+
+
+
+
+
